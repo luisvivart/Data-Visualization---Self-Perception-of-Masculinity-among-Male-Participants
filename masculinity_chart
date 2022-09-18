@@ -1,0 +1,27 @@
+import pandas as pd
+
+data = pd.read_csv("raw-responses.csv")
+
+data.head()
+
+import altair as alt
+
+comprehensive_chart = alt.Chart(data).mark_circle(opacity=0.8, size = 150).encode(
+    x = alt.X("Unnamed: 0", title = "Number of Participants"),
+    y = alt.Y("q0001", title = "Self-Perception of Masculinity", scale = alt.Scale(reverse = True)),
+    size = alt.Size("educ3", title = "Level of Education", sort = ['College or more', 'Some college', 'High school or less'], scale = alt.Scale(range=[100, 400])),
+    color = alt.Color("racethn4", title = "Race", scale = alt.Scale(scheme = "spectral")),
+    tooltip = [
+        alt.Tooltip("racethn4", title = "Race"),
+        alt.Tooltip("orientation", title = "Sexual Orientation"), 
+        alt.Tooltip("educ3", title = "Education"), 
+        alt.Tooltip("age3", title = "Ethnicity"), 
+        alt.Tooltip("kids", title = "Children"),
+              ]
+).properties(
+    width = 1600,
+    height = 120,
+).interactive()
+
+comprehensive_chart
+comprehensive_chart.save('chart.html', embed_options={'renderer':'svg'})
